@@ -6,45 +6,61 @@
     <title>Sorteio de Número Virtual</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f3f3f3;
+            background: linear-gradient(to right, #fbc2eb, #a6c1ee);
         }
         h1 {
+            font-size: 2.5em;
             color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         .input-container {
-            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
         }
         input {
-            padding: 10px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 300px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1em;
+            width: 280px;
+            max-width: 90%;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
         button {
-            padding: 10px 20px;
-            margin: 5px;
+            padding: 12px 24px;
+            margin-top: 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
             background-color: #4CAF50;
             color: white;
-            cursor: pointer;
         }
         button:hover {
+            transform: scale(1.05);
             background-color: #45a049;
         }
-        button.link {
-            background-color: #007bff;
-        }
-        button.link:hover {
-            background-color: #0056b3;
+        button:active {
+            transform: scale(1);
         }
     </style>
     <script>
@@ -133,9 +149,6 @@
     
     <div>
         <button onclick="enviarNumero()">Participar</button>
-        <button class="link" onclick="window.location.href='topuser.html'">TopUser</button>
-        <button class="link" onclick="window.location.href='ajuda.html'">Ajuda</button>
-        <button class="link" onclick="window.location.href='sair.html'">Sair</button>
     </div>
 </body>
 </html>
