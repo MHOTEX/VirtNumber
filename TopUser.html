@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Usuários - Sorteio de Número Virtual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .ranking-container {
+            width: 80%;
+            max-width: 800px;
+            margin-top: 30px;
+        }
+        .ranking-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .ranking-row:hover {
+            background-color: #f1f1f1;
+        }
+        .rank {
+            width: 10%;
+            text-align: left;
+        }
+        .number {
+            width: 60%;
+            text-align: center;
+        }
+        .n1 {
+            width: 30%;
+            text-align: right;
+        }
+        .link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            // Função para carregar e exibir os top números
+            fetchTopUsuarios();
+        };
+
+        function fetchTopUsuarios() {
+            fetch('https://virtnumber-ce732-default-rtdb.firebaseio.com/NUMBER.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Verifica se há dados
+                    if (data) {
+                        let usuarios = [];
+                        for (let numero in data) {
+                            if (data.hasOwnProperty(numero)) {
+                                // Adiciona um objeto para cada número, contendo o N1 e o número
+                                usuarios.push({
+                                    numero: data[numero].NUMERO,
+                                    N1: data[numero].N1
+                                });
+                            }
+                        }
+                        // Ordena os usuários pelo valor de N1 (de maior para menor)
+                        usuarios.sort((a, b) => b.N1 - a.N1);
+
+                        // Exibe os usuários no ranking
+                        displayRanking(usuarios);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados:', error);
+                });
+        }
+
+        function displayRanking(usuarios) {
+            let rankingContainer = document.querySelector('.ranking-container');
+
+            // Limpa o conteúdo atual
+            rankingContainer.innerHTML = '';
+
+            // Adiciona os usuários no ranking
+            usuarios.forEach((usuario, index) => {
+                let rankingRow = document.createElement('div');
+                rankingRow.className = 'ranking-row';
+
+                // Adiciona a posição no ranking
+                let rank = document.createElement('div');
+                rank.className = 'rank';
+                rank.textContent = index + 1; // Posição
+
+                // Adiciona o número do usuário
+                let number = document.createElement('div');
+                number.className = 'number';
+                number.textContent = usuario.numero;
+
+                // Adiciona a quantidade de números (N1)
+                let n1 = document.createElement('div');
+                n1.className = 'n1';
+                n1.textContent = usuario.N1;
+
+                // Adiciona tudo à linha do ranking
+                rankingRow.appendChild(rank);
+                rankingRow.appendChild(number);
+                rankingRow.appendChild(n1);
+
+                // Adiciona a linha ao container
+                rankingContainer.appendChild(rankingRow);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Top Usuários - Sorteio de Número Virtual</h1>
+    
+    <div class="ranking-container">
+        <!-- As linhas do ranking serão geradas aqui -->
+    </div>
+
+    <!-- O botão Participar está separado agora -->
+    <a href="participar.html" class="link">Participar</a>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio de Número Virtual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f3f3f3;
+        }
+        h1 {
+            color: #333;
+        }
+        .input-container {
+            margin: 10px 0;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.link {
+            background-color: #007bff;
+        }
+        button.link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function enviarNumero() {
+            let codigoPais = document.getElementById('codigoPais').value;
+            let numeroCompleto = document.getElementById('numeroCompleto').value;
+
+            // Remover todos os caracteres não numéricos do número
+            numeroCompleto = numeroCompleto.replace(/\D/g, '');
+            codigoPais = codigoPais.replace(/\D/g, '');  // Remover caracteres não numéricos do código do país
+
+            // Verifica se o número é válido
+            if (codigoPais.length < 1 || numeroCompleto.length < 10) {
+                alert('Por favor, insira um código de país válido e um número válido com ao menos 10 dígitos.');
+                return;
+            }
+
+            const numeroFinal = codigoPais + numeroCompleto;  // Concatena o código do país com o número
+
+            // Verifica se o número já existe no Firebase
+            fetch(`https://virtnumber-ce732-default-rtdb.firebaseio.com/NUMBER/${numeroFinal}.json`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // Se o número já existe, incrementa a chave N1
+                        let N1 = data.N1;
+                        N1 = N1 + 1;  // Incrementa o valor de N1
+
+                        // Atualiza a chave N1 no Firebase
+                        const dados = { 
+                            "NUMERO": numeroFinal,
+                            "N1": N1
+                        };
+                        fetch(`https://virtnumber-ce732-default-rtdb.firebaseio.com/NUMBER/${numeroFinal}.json`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dados),
+                        })
+                        .then(() => {
+                            // Após adicionar o número, redireciona para o link
+                            window.location.href = 'https://link-desejado.com';
+                        })
+                        .catch(error => {
+                            console.error('Erro ao atualizar número:', error);
+                            alert('Erro ao atualizar o número. Tente novamente.');
+                        });
+                    } else {
+                        // Número não existe, cria a chave no Firebase com N1 = 1
+                        const dados = { 
+                            "NUMERO": numeroFinal,
+                            "N1": 1
+                        };
+                        fetch(`https://virtnumber-ce732-default-rtdb.firebaseio.com/NUMBER/${numeroFinal}.json`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dados),
+                        })
+                        .then(() => {
+                            // Após adicionar o número, redireciona para o link
+                            window.location.href = 'https://link-desejado.com';
+                        })
+                        .catch(error => {
+                            console.error('Erro ao adicionar número:', error);
+                            alert('Erro ao adicionar o número. Tente novamente.');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar número:', error);
+                    alert('Erro ao verificar o número. Tente novamente.');
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Sorteio de Número Virtual</h1>
+    
+    <div class="input-container">
+        <input type="text" id="codigoPais" placeholder="Código do País (Ex: +55)" maxlength="4">
+        <input type="text" id="numeroCompleto" placeholder="Número (Ex: 999999999)" maxlength="12">
+    </div>
+    
+    <div>
+        <button onclick="enviarNumero()">Participar</button>
+        <button class="link" onclick="window.location.href='topuser.html'">TopUser</button>
+        <button class="link" onclick="window.location.href='ajuda.html'">Ajuda</button>
+        <button class="link" onclick="window.location.href='sair.html'">Sair</button>
+    </div>
+</body>
+</html>
